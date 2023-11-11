@@ -11,18 +11,19 @@
 
 import { createSelector } from 'reselect';
 
-const selectCategoriesState = state => state.categories;
+const selectCategoryReducer = (state) => state.categories;
+
+export const selectCategories = createSelector(
+  [selectCategoryReducer],
+  (categoriesSlice) => categoriesSlice.categories
+);
 
 export const selectCategoriesMap = createSelector(
-  [selectCategoriesState],
-  categoriesState => {
-    const categoriesMap = categoriesState.categories.reduce(
-      (acc, { title, items }) => {
-        acc[title.toLowerCase()] = items;
-        return acc;
-      },
-      {}
-    );
-    return categoriesMap;
-  }
+  [selectCategories],
+  (categories) => 
+    categories.reduce((acc, category) => {
+      const { title, items } = category;
+      acc[title.toLowerCase()] = items;
+      return acc;
+    }, {})
 );
